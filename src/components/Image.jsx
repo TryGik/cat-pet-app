@@ -3,17 +3,17 @@ import { useDispatch } from 'react-redux';
 import { setFavorites, removeFavorites } from '../store/favoritesSlice';
 
 const Image = ({ url, id, favor }) => {
-    // const [favor, setFavor] = React.useState(false)
+    const [favorCat, setFavorCat] = React.useState(favor)
     const dispatch = useDispatch();
 
     const selectFavorite = () => {
         if (!favor) {
             dispatch(setFavorites(id))
-            // setFavor(!favor);
+            setFavorCat(!favor);
         }
         else {
             dispatch(removeFavorites(id))
-            // setFavor(false);
+            setFavorCat(!favor);
         }
     }
 
@@ -21,7 +21,7 @@ const Image = ({ url, id, favor }) => {
 
     return (
         <div className='img_card' style={{ backgroundImage: `url('${url}')` }}>
-            {favor ?
+            {favorCat ?
                 <svg className='favorite' onClick={selectFavorite} width="40" height="37" viewBox="0 0 40 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20 36.7L17.1 34.06C6.8 24.72 0 18.56 0 11C0 4.84 4.84 0 11 0C14.48 0 17.82 1.62 20 4.18C22.18 1.62 25.52 0 29 0C35.16 0 40 4.84 40 11C40 18.56 33.2 24.72 22.9 34.08L20 36.7Z" fill="#F24E1E" />
                 </svg>

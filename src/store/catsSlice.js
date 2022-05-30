@@ -4,7 +4,7 @@ export const fetchCats = createAsyncThunk(
     'cats/fetchCats',
     async function (_, { dispatch, rejectWithValue }) {
         try {
-            const response = await fetch('https://api.thecatapi.com/v1/images/search?limit=15&page=3&order=asc',
+            const response = await fetch(`https://api.thecatapi.com/v1/images/search?limit=100&page=3&order=asc`,
                 {
                     headers: {
                         'x-api-key': 'e65ce818-54d7-4591-bcd9-2aaaadc05150',
@@ -27,12 +27,14 @@ const catsSlice = createSlice({
     name: 'cats',
     initialState: {
         items: [],
+        isLoading: false,
     },
     reducers: {
         setCats: (state, action) => {
             return {
                 ...state,
                 items: action.payload,
+                isLoading: true,
             }
         },
     }
@@ -40,4 +42,5 @@ const catsSlice = createSlice({
 
 export const { setCats } = catsSlice.actions;
 export const selectCats = state => state.cats.items;
+export const selectIsLoading = state => state.cats.isLoading;
 export default catsSlice.reducer;

@@ -12,7 +12,7 @@ const Favorites = () => {
     React.useEffect(() => {
         const favoritesArr = cats.filter((item) => favoritesId.includes(item.id));
         setFavorites(favoritesArr)
-    }, [])
+    }, [favoritesId])
 
     return (
         <div className='wrapper'>

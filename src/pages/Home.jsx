@@ -1,34 +1,54 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Image from '../components/Image';
-import { selectCats, fetchCats } from '../store/catsSlice';
-import { setFavorites, removeFavorites, selectFavorites } from '../store/favoritesSlice';
+import { selectCats, fetchCats, selectIsLoading } from '../store/catsSlice';
+import { selectFavorites } from '../store/favoritesSlice';
+import Paginate from '../components/Paginate';
+import Loader from '../components/Loader';
+
 
 const Home = () => {
-    // const [images, setImages] = React.useState([])
+    const isLoading = useSelector(selectIsLoading)
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const [limitOnPage] = React.useState(12);
+
     const dispatch = useDispatch();
     const cats = useSelector(selectCats);
     const favorites = useSelector(selectFavorites);
 
-    // const [favor, setFavor] = React.useState(false)
-
-    // const selectFavorite = () => {
-    //     if (!favor) {
-    //         setFavor({ url: url, id: id, favor: true }))
-    //         setFavor(true);
-    //     }
-    // }
 
     React.useEffect(() => {
         dispatch(fetchCats());
     }, [])
 
+    const lastImgIndex = currentPage * limitOnPage;
+    const firstlastImgIndex = lastImgIndex - limitOnPage;
+    const currentImg = cats.slice(firstlastImgIndex, lastImgIndex);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    if (!isLoading) {
+        return <Loader />
+    }
+
     return (
-        <div className='wrapper'>
-            {cats && cats.map(image => <Image favor={favorites.length !== 0 && favorites.includes(image.id) ? true : false} key={image.id} {...image} />)}
+        <>
+            <div className='wrapper'>
 
-        </div>
-
+                {currentImg && currentImg.map(image =>
+                    <Image
+                        favor={favorites.length !== 0 && favorites.includes(image.id) ? true : false}
+                        key={image.id}
+                        {...image}
+                    />
+                )}
+            </div>
+            <Paginate
+                limitOnPage={limitOnPage}
+                totalLimit={cats.length}
+                paginate={paginate}
+                currentPage={currentPage}
+            />
+        </>
     )
 }
 
